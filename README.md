@@ -211,6 +211,7 @@ Automatically polls Odoo for new or modified records at configurable intervals.
 | `pollingInterval` | Interval in seconds (default: 60) |
 | `domain` | Optional filter domain |
 | `trackingField` | Field to track changes (default: `write_date`) |
+| `messageName` | Unique name for the message (e.g., `odoo-polling-partners`) |
 
 #### Webhook Mode
 Receives HTTP POST events from Odoo.
@@ -240,8 +241,8 @@ Receives HTTP POST events from Odoo.
 | Template | Type | Description |
 |----------|------|-------------|
 | `odoo-outbound-connector.json` | Service Task | Outbound operations to Odoo |
-| `odoo-inbound-start-event.json` | Start Event | Start process from Odoo polling |
-| `odoo-inbound-intermediate.json` | Intermediate Catch | Poll during process execution |
+| `odoo-inbound-start-event.json` | Start Event | Start process from Odoo polling (requires unique Message Name) |
+| `odoo-inbound-intermediate.json` | Intermediate Catch | Poll during process execution (requires unique Message Name) |
 | `odoo-inbound-connector-start-event.json` | Start Event | Start process from webhook |
 | `odoo-inbound-connector-intermediate.json` | Intermediate Catch | Webhook during process |
 | `odoo-inbound-connector-boundary.json` | Boundary Event | Webhook on activity boundary |
