@@ -1,0 +1,240 @@
+{
+    "$schema": "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
+    "name": "Odoo Polling (Intermediate)",
+    "id": "io.camunda.connector.Odoo.Inbound.Intermediate.Polling.v1",
+    "description": "Poll Odoo 19 for new or modified records and trigger process events",
+    "documentationRef": "https://www.odoo.com/documentation/19.0/developer/reference/external_api.html",
+    "version": 1,
+    "category": {
+        "id": "connectors",
+        "name": "Connectors"
+    },
+    "appliesTo": [
+        "bpmn:IntermediateCatchEvent"
+    ],
+    "elementType": {
+        "value": "bpmn:IntermediateCatchEvent",
+        "eventDefinition": "bpmn:MessageEventDefinition"
+    },
+    "groups": [
+        {
+            "id": "authentication",
+            "label": "Authentication"
+        },
+        {
+            "id": "polling",
+            "label": "Polling Configuration"
+        },
+        {
+            "id": "correlation",
+            "label": "Correlation"
+        },
+        {
+            "id": "output",
+            "label": "Output Mapping"
+        }
+    ],
+    "properties": [
+        {
+            "value": "io.camunda:odoo-inbound:1",
+            "binding": {
+                "property": "type",
+                "type": "zeebe:taskDefinition"
+            },
+            "type": "Hidden"
+        },
+        {
+            "id": "url",
+            "label": "Odoo URL",
+            "optional": false,
+            "constraints": {
+                "notEmpty": true
+            },
+            "feel": "optional",
+            "group": "authentication",
+            "binding": {
+                "name": "url",
+                "type": "zeebe:input"
+            },
+            "type": "String"
+        },
+        {
+            "id": "database",
+            "label": "Database",
+            "optional": false,
+            "constraints": {
+                "notEmpty": true
+            },
+            "feel": "optional",
+            "group": "authentication",
+            "binding": {
+                "name": "database",
+                "type": "zeebe:input"
+            },
+            "type": "String"
+        },
+        {
+            "id": "apiKey",
+            "label": "API Key",
+            "optional": false,
+            "constraints": {
+                "notEmpty": true
+            },
+            "feel": "optional",
+            "group": "authentication",
+            "binding": {
+                "name": "apiKey",
+                "type": "zeebe:input"
+            },
+            "type": "String"
+        },
+        {
+            "id": "model",
+            "label": "Model",
+            "optional": false,
+            "constraints": {
+                "notEmpty": true
+            },
+            "feel": "optional",
+            "group": "polling",
+            "binding": {
+                "name": "model",
+                "type": "zeebe:input"
+            },
+            "type": "String"
+        },
+        {
+            "id": "pollingInterval",
+            "label": "Polling Interval (seconds)",
+            "value": "30",
+            "feel": "optional",
+            "group": "polling",
+            "binding": {
+                "name": "pollingInterval",
+                "type": "zeebe:input"
+            },
+            "type": "String"
+        },
+        {
+            "id": "triggerCondition",
+            "label": "Trigger Condition",
+            "value": "BOTH",
+            "group": "polling",
+            "binding": {
+                "name": "triggerCondition",
+                "type": "zeebe:input"
+            },
+            "type": "Dropdown",
+            "choices": [
+                {
+                    "name": "New Records Only",
+                    "value": "NEW"
+                },
+                {
+                    "name": "Modified Records Only",
+                    "value": "MODIFIED"
+                },
+                {
+                    "name": "New and Modified",
+                    "value": "BOTH"
+                }
+            ]
+        },
+        {
+            "id": "triggerField",
+            "label": "Trigger Field",
+            "value": "write_date",
+            "feel": "optional",
+            "group": "polling",
+            "binding": {
+                "name": "triggerField",
+                "type": "zeebe:input"
+            },
+            "type": "String"
+        },
+        {
+            "id": "filterDomain",
+            "label": "Filter Domain",
+            "optional": true,
+            "feel": "required",
+            "group": "polling",
+            "binding": {
+                "name": "filterDomain",
+                "type": "zeebe:input"
+            },
+            "type": "Text"
+        },
+        {
+            "id": "fields",
+            "label": "Fields to Include",
+            "optional": true,
+            "feel": "optional",
+            "group": "polling",
+            "binding": {
+                "name": "fields",
+                "type": "zeebe:input"
+            },
+            "type": "Text"
+        },
+        {
+            "id": "batchSize",
+            "label": "Batch Size",
+            "value": "50",
+            "feel": "optional",
+            "group": "polling",
+            "binding": {
+                "name": "batchSize",
+                "type": "zeebe:input"
+            },
+            "type": "String"
+        },
+        {
+            "id": "correlationKeyProcess",
+            "label": "Correlation Key (Process)",
+            "description": "Expression to extract from event (e.g., =odooRecordId)",
+            "feel": "required",
+            "group": "correlation",
+            "binding": {
+                "name": "correlationKey.process",
+                "type": "zeebe:input"
+            },
+            "type": "Text"
+        },
+        {
+            "id": "correlationKeyLocal",
+            "label": "Correlation Key (Local)",
+            "feel": "required",
+            "group": "correlation",
+            "binding": {
+                "name": "correlationKey.local",
+                "type": "zeebe:input"
+            },
+            "type": "Text"
+        },
+        {
+            "id": "resultVariable",
+            "label": "Result Variable",
+            "group": "output",
+            "binding": {
+                "key": "resultVariable",
+                "type": "zeebe:taskHeader"
+            },
+            "type": "String"
+        },
+        {
+            "id": "resultExpression",
+            "label": "Result Expression",
+            "optional": true,
+            "feel": "required",
+            "group": "output",
+            "binding": {
+                "key": "resultExpression",
+                "type": "zeebe:taskHeader"
+            },
+            "type": "Text"
+        }
+    ],
+    "icon": {
+        "contents": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTgiIGhlaWdodD0iMTgiPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJvZG9vR3JhZGllbnQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojNzE0QjY3O3N0b3Atb3BhY2l0eToxIiAvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM4NzVBN0I7c3RvcC1vcGFjaXR5OjEiIC8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0NSIgZmlsbD0idXJsKCNvZG9vR3JhZGllbnQpIi8+CiAgPHBhdGggZD0iTTMwIDUwIEMzMCAzOCAzOCAzMCA1MCAzMCBDNjIgMzAgNzAgMzggNzAgNTAgQzcwIDYyIDYyIDcwIDUwIDcwIEMzOCA3MCAzMCA2MiAzMCA1MCBaIE00MCA1MCBDNDAgNTYgNDQgNjAgNTAgNjAgQzU2IDYwIDYwIDU2IDYwIDUwIEM2MCA0NCA1NiA0MCA1MCA0MCBDNDQgNDAgNDAgNDQgNDAgNTAgWiIgZmlsbD0id2hpdGUiLz4KICA8cGF0aCBkPSJNNzAgMjUgTDc1IDMwIEw4MCAyNSBMNzUgMjAgWiIgZmlsbD0id2hpdGUiLz4KICA8cGF0aCBkPSJNNzUgMjUgTDc1IDM1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+"
+    }
+}

@@ -1,0 +1,285 @@
+{
+    "$schema": "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
+    "name": "Odoo Polling (Start Event)",
+    "id": "io.camunda.connector.Odoo.Inbound.StartEvent.Polling.v1",
+    "description": "Poll Odoo 19 for new or modified records and trigger process events",
+    "metadata": {
+        "keywords": [
+            "odoo",
+            "erp",
+            "polling",
+            "inbound",
+            "json-2"
+        ]
+    },
+    "documentationRef": "https://www.odoo.com/documentation/19.0/developer/reference/external_api.html",
+    "version": 1,
+    "category": {
+        "id": "connectors",
+        "name": "Connectors"
+    },
+    "appliesTo": [
+        "bpmn:StartEvent"
+    ],
+    "elementType": {
+        "value": "bpmn:StartEvent",
+        "eventDefinition": "bpmn:MessageEventDefinition"
+    },
+    "groups": [
+        {
+            "id": "authentication",
+            "label": "Authentication"
+        },
+        {
+            "id": "polling",
+            "label": "Polling Configuration"
+        },
+        {
+            "id": "activation",
+            "label": "Activation"
+        },
+        {
+            "id": "correlation",
+            "label": "Correlation"
+        },
+        {
+            "id": "output",
+            "label": "Output Mapping"
+        }
+    ],
+    "properties": [
+        {
+            "value": "io.camunda:odoo-inbound:1",
+            "binding": {
+                "property": "type",
+                "type": "zeebe:taskDefinition"
+            },
+            "type": "Hidden"
+        },
+        {
+            "id": "url",
+            "label": "Odoo URL",
+            "description": "Base URL of your Odoo 19 instance",
+            "optional": false,
+            "constraints": {
+                "notEmpty": true
+            },
+            "feel": "optional",
+            "group": "authentication",
+            "binding": {
+                "name": "url",
+                "type": "zeebe:input"
+            },
+            "type": "String"
+        },
+        {
+            "id": "database",
+            "label": "Database",
+            "description": "Odoo database name",
+            "optional": false,
+            "constraints": {
+                "notEmpty": true
+            },
+            "feel": "optional",
+            "group": "authentication",
+            "binding": {
+                "name": "database",
+                "type": "zeebe:input"
+            },
+            "type": "String"
+        },
+        {
+            "id": "apiKey",
+            "label": "API Key",
+            "description": "API key from Odoo user profile",
+            "optional": false,
+            "constraints": {
+                "notEmpty": true
+            },
+            "feel": "optional",
+            "group": "authentication",
+            "binding": {
+                "name": "apiKey",
+                "type": "zeebe:input"
+            },
+            "type": "String"
+        },
+        {
+            "id": "model",
+            "label": "Model",
+            "description": "Odoo model to monitor (e.g., sale.order, res.partner)",
+            "optional": false,
+            "constraints": {
+                "notEmpty": true
+            },
+            "feel": "optional",
+            "group": "polling",
+            "binding": {
+                "name": "model",
+                "type": "zeebe:input"
+            },
+            "type": "String"
+        },
+        {
+            "id": "pollingInterval",
+            "label": "Polling Interval (seconds)",
+            "description": "How often to check for new records (min: 10 seconds)",
+            "optional": false,
+            "value": "30",
+            "feel": "optional",
+            "group": "polling",
+            "binding": {
+                "name": "pollingInterval",
+                "type": "zeebe:input"
+            },
+            "type": "String"
+        },
+        {
+            "id": "triggerCondition",
+            "label": "Trigger Condition",
+            "description": "When to trigger events",
+            "optional": false,
+            "value": "BOTH",
+            "group": "polling",
+            "binding": {
+                "name": "triggerCondition",
+                "type": "zeebe:input"
+            },
+            "type": "Dropdown",
+            "choices": [
+                {
+                    "name": "New Records Only",
+                    "value": "NEW"
+                },
+                {
+                    "name": "Modified Records Only",
+                    "value": "MODIFIED"
+                },
+                {
+                    "name": "New and Modified",
+                    "value": "BOTH"
+                }
+            ]
+        },
+        {
+            "id": "triggerField",
+            "label": "Trigger Field",
+            "description": "Field to track changes (e.g., write_date, state)",
+            "optional": true,
+            "value": "write_date",
+            "feel": "optional",
+            "group": "polling",
+            "binding": {
+                "name": "triggerField",
+                "type": "zeebe:input"
+            },
+            "type": "String"
+        },
+        {
+            "id": "filterDomain",
+            "label": "Filter Domain",
+            "description": "Additional filter (Odoo domain format, e.g., [[\"state\", \"=\", \"draft\"]])",
+            "optional": true,
+            "feel": "required",
+            "group": "polling",
+            "binding": {
+                "name": "filterDomain",
+                "type": "zeebe:input"
+            },
+            "type": "Text"
+        },
+        {
+            "id": "fields",
+            "label": "Fields to Include",
+            "description": "Fields to include in event (JSON array, e.g., [\"name\", \"state\"])",
+            "optional": true,
+            "feel": "optional",
+            "group": "polling",
+            "binding": {
+                "name": "fields",
+                "type": "zeebe:input"
+            },
+            "type": "Text"
+        },
+        {
+            "id": "batchSize",
+            "label": "Batch Size",
+            "description": "Max records per poll (1-100)",
+            "optional": true,
+            "value": "50",
+            "feel": "optional",
+            "group": "polling",
+            "binding": {
+                "name": "batchSize",
+                "type": "zeebe:input"
+            },
+            "type": "String"
+        },
+        {
+            "id": "activationCondition",
+            "label": "Activation Condition",
+            "description": "Condition to activate this connector (FEEL expression)",
+            "optional": true,
+            "feel": "required",
+            "group": "activation",
+            "binding": {
+                "name": "activationCondition",
+                "type": "zeebe:input"
+            },
+            "type": "Text"
+        },
+        {
+            "id": "correlationKeyProcess",
+            "label": "Process Correlation Key",
+            "description": "Extract correlation from inbound event (e.g., =odooRecordId)",
+            "optional": true,
+            "feel": "required",
+            "group": "correlation",
+            "binding": {
+                "name": "correlationKey.process",
+                "type": "zeebe:input"
+            },
+            "type": "Text"
+        },
+        {
+            "id": "correlationKeyLocal",
+            "label": "Local Correlation Key",
+            "description": "Local correlation value",
+            "optional": true,
+            "feel": "required",
+            "group": "correlation",
+            "binding": {
+                "name": "correlationKey.local",
+                "type": "zeebe:input"
+            },
+            "type": "Text"
+        },
+        {
+            "id": "resultVariable",
+            "label": "Result Variable",
+            "description": "Variable to store event data",
+            "group": "output",
+            "binding": {
+                "key": "resultVariable",
+                "type": "zeebe:taskHeader"
+            },
+            "type": "String"
+        },
+        {
+            "id": "resultExpression",
+            "label": "Result Expression",
+            "description": "FEEL expression to map event. Variables: odooModel, odooRecordId, odooEventType, odooRecord, odooTimestamp",
+            "optional": true,
+            "feel": "required",
+            "group": "output",
+            "binding": {
+                "key": "resultExpression",
+                "type": "zeebe:taskHeader"
+            },
+            "type": "Text"
+        }
+    ],
+    "icon": {
+        "contents": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiB3aWR0aD0iMTgiIGhlaWdodD0iMTgiPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJvZG9vR3JhZGllbnQiIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdHlsZT0ic3RvcC1jb2xvcjojNzE0QjY3O3N0b3Atb3BhY2l0eToxIiAvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0eWxlPSJzdG9wLWNvbG9yOiM4NzVBN0I7c3RvcC1vcGFjaXR5OjEiIC8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogIDwvZGVmcz4KICA8Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0NSIgZmlsbD0idXJsKCNvZG9vR3JhZGllbnQpIi8+CiAgPHBhdGggZD0iTTMwIDUwIEMzMCAzOCAzOCAzMCA1MCAzMCBDNjIgMzAgNzAgMzggNzAgNTAgQzcwIDYyIDYyIDcwIDUwIDcwIEMzOCA3MCAzMCA2MiAzMCA1MCBaIE00MCA1MCBDNDAgNTYgNDQgNjAgNTAgNjAgQzU2IDYwIDYwIDU2IDYwIDUwIEM2MCA0NCA1NiA0MCA1MCA0MCBDNDQgNDAgNDAgNDQgNDAgNTAgWiIgZmlsbD0id2hpdGUiLz4KICA8cGF0aCBkPSJNNzAgMjUgTDc1IDMwIEw4MCAyNSBMNzUgMjAgWiIgZmlsbD0id2hpdGUiLz4KICA8cGF0aCBkPSJNNzUgMjUgTDc1IDM1IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9zdmc+"
+    }
+}
