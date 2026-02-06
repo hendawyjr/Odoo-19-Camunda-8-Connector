@@ -6,7 +6,7 @@
 
 A **production-ready** Camunda 8 Connector for integrating with **Odoo 19's External JSON-2 API**. This connector enables seamless bi-directional communication between Camunda workflows and Odoo ERP systems.
 
-![Odoo Connector Banner](docs/images/banner.png)
+![Odoo Connector Banner](Resources/Banner.png)
 
 ## Features
 
