@@ -36,13 +36,13 @@ A **production-ready** Camunda 8 Connector for integrating with **Odoo 19's Exte
 
 ### Option 1: Download Pre-built JARs
 
-Download the latest releases from the [Releases](https://github.com/Tehuti-Projects/camunda-odoo-connector/releases) page.
+Download the latest releases from the [Releases](https://github.com/Tehuti-Projects/Odoo-19-Camunda-8-Connector/releases) page.
 
 ### Option 2: Build from Source
 
 ```bash
 # Clone the repository
-git clone https://github.com/Tehuti-Projects/camunda-odoo-connector.git
+git clone https://github.com/Tehuti-Projects/Odoo-19-Camunda-8-Connector.git
 cd camunda-odoo-connector
 
 # Build outbound connector
@@ -336,7 +336,7 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 
 - 📖 [Odoo External API Documentation](https://www.odoo.com/documentation/19.0/developer/reference/external_api.html)
 - 📖 [Camunda Connectors Documentation](https://docs.camunda.io/docs/components/connectors/introduction/)
-- 🐛 [Issue Tracker](https://github.com/Tehuti-Projects/camunda-odoo-connector/issues)
+- 🐛 [Issue Tracker](https://github.com/Tehuti-Projects/Odoo-19-Camunda-8-Connector/issues)
 
 ## Acknowledgments
 
