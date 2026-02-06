@@ -1,7 +1,7 @@
 {
     "$schema": "https://unpkg.com/@camunda/zeebe-element-templates-json-schema/resources/schema.json",
     "name": "Odoo Polling (Start Event)",
-    "id": "io.camunda.connector.Odoo.Inbound.StartEvent.Polling.v1",
+    "id": "io.camunda.connector.Odoo.Inbound.StartEvent.Polling",
     "description": "Poll Odoo 19 for new or modified records and trigger process events",
     "metadata": {
         "keywords": [
@@ -13,7 +13,7 @@
         ]
     },
     "documentationRef": "https://www.odoo.com/documentation/19.0/developer/reference/external_api.html",
-    "version": 1,
+    "version": 4,
     "category": {
         "id": "connectors",
         "name": "Connectors"
@@ -49,12 +49,27 @@
     ],
     "properties": [
         {
-            "value": "io.camunda:odoo-inbound:1",
+            "type": "Hidden",
+            "value": "io.camunda:odoo-inbound-polling:1",
             "binding": {
-                "property": "type",
-                "type": "zeebe:taskDefinition"
+                "type": "zeebe:property",
+                "name": "inbound.type"
+            }
+        },
+        {
+            "id": "messageName",
+            "label": "Message Name",
+            "description": "Unique name for this message (e.g. odoo-polling-partners)",
+            "type": "String",
+            "optional": false,
+            "constraints": {
+                "notEmpty": true
             },
-            "type": "Hidden"
+            "group": "correlation",
+            "binding": {
+                "type": "bpmn:Message#property",
+                "name": "name"
+            }
         },
         {
             "id": "url",
@@ -67,8 +82,8 @@
             "feel": "optional",
             "group": "authentication",
             "binding": {
-                "name": "url",
-                "type": "zeebe:input"
+                "type": "zeebe:property",
+                "name": "url"
             },
             "type": "String"
         },
@@ -83,8 +98,8 @@
             "feel": "optional",
             "group": "authentication",
             "binding": {
-                "name": "database",
-                "type": "zeebe:input"
+                "type": "zeebe:property",
+                "name": "database"
             },
             "type": "String"
         },
@@ -99,8 +114,8 @@
             "feel": "optional",
             "group": "authentication",
             "binding": {
-                "name": "apiKey",
-                "type": "zeebe:input"
+                "type": "zeebe:property",
+                "name": "apiKey"
             },
             "type": "String"
         },
@@ -115,8 +130,8 @@
             "feel": "optional",
             "group": "polling",
             "binding": {
-                "name": "model",
-                "type": "zeebe:input"
+                "type": "zeebe:property",
+                "name": "model"
             },
             "type": "String"
         },
@@ -129,8 +144,8 @@
             "feel": "optional",
             "group": "polling",
             "binding": {
-                "name": "pollingInterval",
-                "type": "zeebe:input"
+                "type": "zeebe:property",
+                "name": "pollingInterval"
             },
             "type": "String"
         },
@@ -142,8 +157,8 @@
             "value": "BOTH",
             "group": "polling",
             "binding": {
-                "name": "triggerCondition",
-                "type": "zeebe:input"
+                "type": "zeebe:property",
+                "name": "triggerCondition"
             },
             "type": "Dropdown",
             "choices": [
@@ -170,8 +185,8 @@
             "feel": "optional",
             "group": "polling",
             "binding": {
-                "name": "triggerField",
-                "type": "zeebe:input"
+                "type": "zeebe:property",
+                "name": "triggerField"
             },
             "type": "String"
         },
@@ -183,8 +198,8 @@
             "feel": "required",
             "group": "polling",
             "binding": {
-                "name": "filterDomain",
-                "type": "zeebe:input"
+                "type": "zeebe:property",
+                "name": "filterDomain"
             },
             "type": "Text"
         },
@@ -196,8 +211,8 @@
             "feel": "optional",
             "group": "polling",
             "binding": {
-                "name": "fields",
-                "type": "zeebe:input"
+                "type": "zeebe:property",
+                "name": "fields"
             },
             "type": "Text"
         },
@@ -210,8 +225,8 @@
             "feel": "optional",
             "group": "polling",
             "binding": {
-                "name": "batchSize",
-                "type": "zeebe:input"
+                "type": "zeebe:property",
+                "name": "batchSize"
             },
             "type": "String"
         },
@@ -223,34 +238,8 @@
             "feel": "required",
             "group": "activation",
             "binding": {
-                "name": "activationCondition",
-                "type": "zeebe:input"
-            },
-            "type": "Text"
-        },
-        {
-            "id": "correlationKeyProcess",
-            "label": "Process Correlation Key",
-            "description": "Extract correlation from inbound event (e.g., =odooRecordId)",
-            "optional": true,
-            "feel": "required",
-            "group": "correlation",
-            "binding": {
-                "name": "correlationKey.process",
-                "type": "zeebe:input"
-            },
-            "type": "Text"
-        },
-        {
-            "id": "correlationKeyLocal",
-            "label": "Local Correlation Key",
-            "description": "Local correlation value",
-            "optional": true,
-            "feel": "required",
-            "group": "correlation",
-            "binding": {
-                "name": "correlationKey.local",
-                "type": "zeebe:input"
+                "type": "zeebe:property",
+                "name": "activationCondition"
             },
             "type": "Text"
         },
@@ -260,8 +249,8 @@
             "description": "Variable to store event data",
             "group": "output",
             "binding": {
-                "key": "resultVariable",
-                "type": "zeebe:taskHeader"
+                "type": "zeebe:property",
+                "name": "resultVariable"
             },
             "type": "String"
         },
@@ -273,8 +262,8 @@
             "feel": "required",
             "group": "output",
             "binding": {
-                "key": "resultExpression",
-                "type": "zeebe:taskHeader"
+                "type": "zeebe:property",
+                "name": "resultExpression"
             },
             "type": "Text"
         }
