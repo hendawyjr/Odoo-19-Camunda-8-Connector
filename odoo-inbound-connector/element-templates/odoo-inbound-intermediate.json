@@ -228,7 +228,7 @@
         {
             "id": "resultExpression",
             "label": "Result Expression",
-            "optional": true,
+            "value": "={ \"model\": odooModel, \"recordId\": odooRecordId, \"eventType\": odooEventType, \"timestamp\": odooTimestamp, \"isNew\": odooEventType = \"CREATE\", \"isUpdate\": odooEventType = \"UPDATE\", \"data\": odooRecord }",
             "feel": "required",
             "group": "output",
             "binding": {
