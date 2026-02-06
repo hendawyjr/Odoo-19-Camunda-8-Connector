@@ -46,7 +46,7 @@
         {
             "id": "messageName",
             "label": "Message Name",
-            "description": "Unique name for this message (e.g. odoo-polling-partners)",
+            "description": "Unique name for this message (e.g. odoo-polling-partners). IMPORTANT: Manually set the Message Name in the BPMN Message element to match this.",
             "type": "String",
             "optional": false,
             "constraints": {
