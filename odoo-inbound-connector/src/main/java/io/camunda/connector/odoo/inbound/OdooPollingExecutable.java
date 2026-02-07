@@ -178,7 +178,12 @@ public class OdooPollingExecutable implements InboundConnectorExecutable<Inbound
                 ? ((Number) record.get("id")).intValue()
                 : null;
 
-        if (recordId == null || processedIds.contains(recordId)) {
+        if (recordId == null) {
+            return;
+        }
+
+        // We still keep the local cache to save unnecessary network calls
+        if (processedIds.contains(recordId)) {
             return;
         }
 
@@ -194,7 +199,16 @@ public class OdooPollingExecutable implements InboundConnectorExecutable<Inbound
                 properties.getEffectiveTriggerField());
 
         try {
+            // Construct a standardized, unique Message ID for deduplication
+            // Format: odoo-{model}-{id}-{eventType}
+            // Example: odoo-res.partner-123-create
+            String messageId = String.format("odoo-%s-%d-%s",
+                    properties.model(),
+                    recordId,
+                    eventType);
+
             CorrelationRequest request = CorrelationRequest.builder()
+                    .messageId(messageId) // Critical for Deduplication
                     .variables(event.toVariables())
                     .build();
 

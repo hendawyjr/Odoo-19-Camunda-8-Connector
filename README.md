@@ -19,11 +19,11 @@ A **production-ready** Camunda 8 Connector for integrating with **Odoo 19's Exte
 - **Full JSON-2 API Support**: Uses Odoo 19's modern REST-like API
 
 ### Inbound Connector (Odoo → Camunda)
-- **Webhook Mode**: Receive real-time events from Odoo via HTTP webhooks
-- **Polling Mode**: Periodically poll Odoo for new/modified records
-- **Flexible Event Types**: Handle create, update, delete, and custom operations
-- **Correlation Support**: Route events to specific process instances
-- **Multi-model Support**: Monitor any Odoo model
+- **Polling Mode (Primary)**: Periodically poll Odoo 19 for new/modified records with robust deduplication.
+- **Broker-Level Deduplication**: Uses unique `messageId` to ensure "Exactly-Once" process execution.
+- **Flexible BPMN Support**: Includes templates for Start Events (Message/Simple), Intermediate Catch, and Boundary Events.
+- **Custom Filters**: Leverage Odoo domain syntax to monitor specific record states.
+- **Multi-model Support**: Monitor any Odoo model (e.g., `sale.order`, `res.partner`).
 
 ## Requirements
 
@@ -43,7 +43,7 @@ Download the latest releases from the [Releases](https://github.com/Tehuti-Proje
 ```bash
 # Clone the repository
 git clone https://github.com/Tehuti-Projects/Odoo-19-Camunda-8-Connector.git
-cd camunda-odoo-connector
+cd Odoo-19-Camunda-8-Connector
 
 # Build outbound connector
 cd odoo-outbound-connector
@@ -202,50 +202,25 @@ Copy the element templates from `element-templates/` to your Camunda Modeler:
 ### Inbound Connector
 
 #### Polling Mode
-Automatically polls Odoo for new or modified records at configurable intervals.
+The connector monitors Odoo models at regular intervals. It generates a unique `messageId` in the format `odoo-{model}-{recordId}-{eventType}` to prevent duplicates.
 
 | Property | Description |
 |----------|-------------|
-| `mode` | `POLLING` |
 | `model` | Odoo model to monitor (e.g., `sale.order`) |
-| `pollingInterval` | Interval in seconds (default: 60) |
-| `domain` | Optional filter domain |
+| `pollingInterval` | Interval in seconds (default: 30) |
+| `domain` | Optional filter domain (Polish notation) |
 | `trackingField` | Field to track changes (default: `write_date`) |
-| `messageName` | Unique name for the message (e.g., `odoo-polling-partners`) |
-
-#### Webhook Mode
-Receives HTTP POST events from Odoo.
-
-| Property | Description |
-|----------|-------------|
-| `mode` | `WEBHOOK` |
-| `context` | Webhook path context |
-| `expectedModels` | Comma-separated list of expected models |
-
-##### Webhook Payload Format
-```json
-{
-  "model": "sale.order",
-  "operation": "create",
-  "record_id": 123,
-  "timestamp": "2024-01-15T10:30:00Z",
-  "data": {
-    "name": "SO001",
-    "partner_id": 42
-  }
-}
-```
+| `messageName` | Unique name for the message (required for Message Start/Catch) |
 
 ## Element Templates
 
 | Template | Type | Description |
 |----------|------|-------------|
-| `odoo-outbound-connector.json` | Service Task | Outbound operations to Odoo |
-| `odoo-inbound-start-event.json` | Start Event | Start process from Odoo polling (requires unique Message Name) |
-| `odoo-inbound-intermediate.json` | Intermediate Catch | Poll during process execution (requires unique Message Name) |
-| `odoo-inbound-connector-start-event.json` | Start Event | Start process from webhook |
-| `odoo-inbound-connector-intermediate.json` | Intermediate Catch | Webhook during process |
-| `odoo-inbound-connector-boundary.json` | Boundary Event | Webhook on activity boundary |
+| `odoo-outbound-connector.json` | Service Task | Outbound operations (CRUD, Search, Execute) |
+| `odoo-polling-connector-message-start-event.json` | Message Start | **Recommended.** Starts process with Exactly-Once guarantees. |
+| `odoo-polling-connector-start-event.json` | Start Event | Simple start event (No message required). |
+| `odoo-polling-connector-intermediate.json` | Intermediate Catch | Pauses process until a specific Odoo event occurs. |
+| `odoo-polling-connector-boundary.json` | Boundary Event | Interrupts activity when an Odoo event occurs. |
 
 ## Domain Filter Syntax
 
